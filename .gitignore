@@ -1,0 +1,38 @@
+# Node modules
+node_modules/
+
+# Vite build output
+dist/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Local env files (por si agregas en el futuro)
+.env
+.env.local
+.env.*.local
+
+# VSCode config
+.vscode/
+
+# macOS file attributes
+*.DS_Store
+
+# Logs
+logs
+*.log
+
+# Optional IDE configs
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Cache
+.cache/
