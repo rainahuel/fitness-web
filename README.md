@@ -1,12 +1,39 @@
-# React + Vite
+# 🏋️ Your Fitness Bible
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A minimalist and powerful fitness web app to track your progress, calculate your calories, and stay consistent.  
+Built with React, Bulma, and pure motivation.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 💡 Features
 
-## Expanding the ESLint configuration
+- 🧮 **Calorie Calculator** with deficit/surplus estimation
+- 🧾 Download your plan as a **PDF**
+- 📱 Fully responsive: works on mobile and desktop
+- 🖤 Clean, dark theme for focus and style
+- 💪 Built with love and sweat by Arturo Rainahuel
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 📦 Tech Stack
+
+- [React](https://react.dev/)
+- [Vite](https://vitejs.dev/)
+- [Bulma CSS](https://bulma.io/)
+- [TypeScript](https://www.typescriptlang.org/) (optional)
+- [jsPDF](https://github.com/parallax/jsPDF) for PDF export
+
+---
+
+## 🚀 Getting Started
+
+```bash
+# Clone the project
+git clone https://github.com/your-user/your-fitness-app.git
+cd your-fitness-app
+
+# Install dependencies
+npm install
+
+# Run in development
+npm run dev
