@@ -148,6 +148,16 @@ export default function CalorieCalculator() {
           </div>
         </div>
       </section>
+      <div className="has-text-centered mt-4">
+  <a
+    className="button is-small is-light is-link"
+    href="/references"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    🔬 View Scientific References
+  </a>
+</div>
 
       {result && (
         <section className="section">
