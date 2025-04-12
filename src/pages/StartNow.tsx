@@ -12,7 +12,7 @@ export default function StartNow() {
         <p className="mb-4">Use these tools to kickstart your transformation.</p>
         <div className="buttons is-centered mb-5">
           <Link className="button is-link is-light" to="/startnow/calories">Calorie Calculator</Link>
-          <Link className="button is-link is-light" to="/startnow/macros">Macro Calculator (Coming Soon)</Link>
+          <Link className="button is-link is-light" to="/startnow/macros">Macro Calculator</Link>
         </div>
         <Routes>
           <Route path="calories" element={<CalorieCalculator />} />
