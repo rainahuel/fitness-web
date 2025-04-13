@@ -1,49 +1,11 @@
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Contact from "./pages/Contact";
 import StartNow from "./pages/StartNow";
 import References from "./pages/References";
 import Nutrition from "./pages/Nutrition";
-
-function TabsMenu() {
-  const location = useLocation();
-
-  return (
-    <div
-      className="tabs is-toggle is-centered is-boxed"
-      style={{
-        position: "fixed",
-        backgroundColor: "rgb(0 82 146)",
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 1000,
-        paddingTop: "1rem",
-        paddingBottom: "1rem",
-        borderBottom: "1px solid rgb(0 0 0)",
-      }}
-    >
-      <ul>
-        <li className={location.pathname === "/" ? "is-active" : ""}>
-          <Link to="/">Home</Link>
-        </li>
-        <li className={location.pathname.startsWith("/startnow") ? "is-active" : ""}>
-          <Link to="/startnow">Start Now</Link>
-        </li>
-        <li className={location.pathname === "/references" ? "is-active" : ""}>
-          <Link to="/references">References</Link>
-        </li>
-        <li className={location.pathname === "/nutrition" ? "is-active" : ""}>
-          <Link to="/nutrition">Nutrition</Link>
-        </li>
-        <li className={location.pathname === "/contact" ? "is-active" : ""}>
-          <Link to="/contact">Contact</Link>
-        </li>
-      </ul>
-
-    </div>
-  );
-}
+import TabsMenu from "./components/TabsMenu"; // ✅ usamos este
 
 export default function App() {
   return (
