@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import Contact from "./pages/Contact";
 import StartNow from "./pages/StartNow";
 import References from "./pages/References";
+import Nutrition from "./pages/Nutrition";
 
 function TabsMenu() {
   const location = useLocation();
@@ -32,11 +33,14 @@ function TabsMenu() {
         <li className={location.pathname === "/references" ? "is-active" : ""}>
           <Link to="/references">References</Link>
         </li>
+        <li className={location.pathname === "/nutrition" ? "is-active" : ""}>
+          <Link to="/nutrition">Nutrition</Link>
+        </li>
         <li className={location.pathname === "/contact" ? "is-active" : ""}>
           <Link to="/contact">Contact</Link>
         </li>
       </ul>
-      
+
     </div>
   );
 }
@@ -51,6 +55,7 @@ export default function App() {
           <Route path="/startnow/*" element={<StartNow />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/references" element={<References />} />
+          <Route path="/nutrition" element={<Nutrition />} />
         </Routes>
       </div>
     </Router>

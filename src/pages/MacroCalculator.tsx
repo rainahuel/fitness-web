@@ -1,10 +1,10 @@
-
 import React, { useState } from "react";
 import jsPDF from "jspdf";
 
 export default function MacroCalculator() {
   const [weight, setWeight] = useState("");
   const [calories, setCalories] = useState("");
+  const [goal, setGoal] = useState("deficit");
   const [result, setResult] = useState(null);
 
   const calculateMacros = () => {
@@ -16,8 +16,16 @@ export default function MacroCalculator() {
       return;
     }
 
-    const proteinPerKg = 2.2;
-    const fatPerKg = 0.8;
+    let proteinPerKg = 2.2;
+    let fatPerKg = 0.8;
+
+    if (goal === "maintenance") {
+      proteinPerKg = 2.0;
+      fatPerKg = 1.0;
+    } else if (goal === "surplus") {
+      proteinPerKg = 1.8;
+      fatPerKg = 1.2;
+    }
 
     const proteinGrams = Math.round(w * proteinPerKg);
     const fatGrams = Math.round(w * fatPerKg);
@@ -40,38 +48,58 @@ export default function MacroCalculator() {
   const downloadPDF = () => {
     if (!result) return;
     const doc = new jsPDF();
-    doc.text("Built by Rain - Macro Plan (Science-based)", 10, 10);
+    doc.text("Built by Rain - Macro Plan (Goal-based)", 10, 10);
     doc.text(`Total Calories: ${result.calories}`, 10, 20);
-    doc.text(`Protein: ${result.proteinGrams}g (2.2g/kg)`, 10, 30);
-    doc.text(`Fat: ${result.fatGrams}g (0.8g/kg)`, 10, 40);
+    doc.text(`Protein: ${result.proteinGrams}g`, 10, 30);
+    doc.text(`Fat: ${result.fatGrams}g`, 10, 40);
     doc.text(`Carbohydrates: ${result.carbGrams}g`, 10, 50);
     doc.save("macro_plan.pdf");
   };
 
   return (
     <div className="mt-5">
-      <h3 className="title is-5">Macro Calculator (Science-Based)</h3>
+      <h3 className="title is-5">Macro Calculator (Goal-Based)</h3>
+
+      <p className="mb-4">
+        Enter your weight, daily calories, and training goal.  
+        Your macronutrient targets will adjust based on whether you're cutting, maintaining, or bulking.
+      </p>
+
       <div className="field">
         <label className="label">Weight (kg)</label>
         <input className="input" type="number" value={weight} onChange={(e) => setWeight(e.target.value)} />
       </div>
+
       <div className="field">
         <label className="label">Daily Calorie Goal</label>
         <input className="input" type="number" value={calories} onChange={(e) => setCalories(e.target.value)} />
       </div>
+
+      <div className="field">
+        <label className="label">Goal</label>
+        <div className="select is-fullwidth">
+          <select value={goal} onChange={(e) => setGoal(e.target.value)}>
+            <option value="deficit">Lose Fat</option>
+            <option value="maintenance">Maintain</option>
+            <option value="surplus">Gain Muscle</option>
+          </select>
+        </div>
+      </div>
+
       <button className="button is-primary mt-3" onClick={calculateMacros}>
         Calculate Macros
       </button>
+
       <div className="has-text-centered mt-4">
-  <a
-    className="button is-small is-light is-link"
-    href="/references"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    🔬 View Scientific References
-  </a>
-</div>
+        <a
+          className="button is-small is-light is-link"
+          href="/references"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          🔬 View Scientific References
+        </a>
+      </div>
 
       {result && (
         <div className="notification is-info mt-4">
