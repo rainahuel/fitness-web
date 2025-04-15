@@ -36,40 +36,44 @@ export default function WorkoutGenerator() {
 
   const downloadPDF = () => {
     if (!routine.length) return;
-
+  
     const doc = new jsPDF();
-    doc.text(
-      `Training Plan – ${method.toUpperCase()} – ${goal.toUpperCase()} – ${level.toUpperCase()} – ${daysPerWeek} days/week`,
-      10,
-      10
-    );
-
-    let y = 20;
-
+  
+    doc.setFontSize(14);
+    doc.text(`Training Plan`, 10, 10);
+    doc.setFontSize(10);
+    doc.text(`Method: ${method.toUpperCase()}`, 10, 18);
+    doc.text(`Goal: ${goal.toUpperCase()}`, 10, 24);
+    doc.text(`Level: ${level.toUpperCase()}`, 10, 30);
+    doc.text(`Days/Week: ${daysPerWeek}`, 10, 36);
+  
+    let y = 45;
+  
     routine.forEach((day) => {
+      doc.setFontSize(12);
       doc.text(`${day.day} - ${day.focus}`, 10, y);
-
-      const rows = day.exercises.map((ex: any) => [
-        ex.name,
-        ex.sets,
-        ex.reps,
-        ex.rest,
-      ]);
-
-      (doc as any).autoTable({
-        startY: y + 5,
-        head: [["Exercise", "Sets", "Reps", "Rest"]],
-        body: rows,
-        styles: { fontSize: 10 },
-        theme: "grid",
-        margin: { left: 10, right: 10 },
+      y += 6;
+  
+      day.exercises.forEach((ex: any) => {
+        doc.setFontSize(10);
+        doc.text(
+          `• ${ex.name} — Sets: ${ex.sets}, Reps: ${ex.reps}, Rest: ${ex.rest}`,
+          12,
+          y
+        );
+        y += 5;
+        if (y > 280) {
+          doc.addPage();
+          y = 10;
+        }
       });
-
-      y = (doc as any).lastAutoTable.finalY + 10;
+  
+      y += 8;
     });
-
+  
     doc.save("training_plan.pdf");
   };
+  
 
   return (
     <section className="section centered-page">
