@@ -13,6 +13,9 @@ export default function StartNow() {
         <div className="buttons is-centered mb-5">
           <Link className="button is-link is-light" to="/startnow/calories">Calorie Calculator</Link>
           <Link className="button is-link is-light" to="/startnow/macros">Macro Calculator</Link>
+          <Link to="/workout" className="button is-link mt-3">
+            View Prebuilt Workout Plan
+          </Link>
         </div>
         <Routes>
           <Route path="calories" element={<CalorieCalculator />} />

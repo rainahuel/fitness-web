@@ -10,7 +10,28 @@ export default function References() {
           Every body is different — there’s no single formula that works for everyone.
           But having science-based foundations gives you a solid starting point to build your own path with confidence.
         </p>
-        <h3 className="title is-5 mt-4">Macro Calculator</h3>
+
+        <h3 className="title is-5 mt-4">Training Methods</h3>
+        <ul>
+          <li>
+            <strong>Helms Method:</strong><br />
+            Helms ER, Zourdos MC, Aragon AA (2017).
+            <a href="https://www.researchgate.net/publication/311518432" target="_blank" rel="noopener noreferrer">
+              Evidence-Based Recommendations for Natural Bodybuilding Contest Preparation.
+            </a><br />
+            Also based on: <em>The Muscle and Strength Pyramid – Training</em> by Eric Helms.
+          </li>
+          <li className="mt-3">
+            <strong>Schoenfeld Method:</strong><br />
+            Schoenfeld BJ (2010).
+            <a href="https://pubmed.ncbi.nlm.nih.gov/20847704/" target="_blank" rel="noopener noreferrer">
+              Mechanisms of muscle hypertrophy and their application to resistance training.
+            </a><br />
+            Also based on: <em>Science and Development of Muscle Hypertrophy</em> by Brad Schoenfeld.
+          </li>
+        </ul>
+
+        <h3 className="title is-5 mt-5">Macro Calculator</h3>
         <ul>
           <li>
             <strong>Protein intake (1.6–2.2g/kg):</strong><br />
@@ -49,24 +70,6 @@ export default function References() {
             Black AE, et al. (1996).
             <a href="https://academic.oup.com/ajcn/article/51/2/241/4695475" target="_blank" rel="noopener noreferrer">
               American Journal of Clinical Nutrition – Evaluation of energy intake.
-            </a>
-          </li>
-        </ul>
-
-        <h3 className="title is-5 mt-5">Training</h3>
-        <ul>
-          <li>
-            <strong>Muscle hypertrophy & volume:</strong><br />
-            Schoenfeld BJ (2010).
-            <a href="https://pubmed.ncbi.nlm.nih.gov/20847704/" target="_blank" rel="noopener noreferrer">
-              PubMed – Mechanisms of muscle hypertrophy and application to resistance training.
-            </a>
-          </li>
-          <li className="mt-3">
-            <strong>Weekly sets per muscle group:</strong><br />
-            Schoenfeld BJ & Krieger JW (2016).
-            <a href="https://pubmed.ncbi.nlm.nih.gov/27102172/" target="_blank" rel="noopener noreferrer">
-              PubMed – Dose-response relationship between weekly sets and hypertrophy.
             </a>
           </li>
         </ul>

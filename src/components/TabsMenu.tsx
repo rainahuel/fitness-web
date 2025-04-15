@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-
-
 export default function TabsMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
@@ -12,7 +10,7 @@ export default function TabsMenu() {
 
   return (
     <>
-      {/* === NAVBAR (SIEMPRE PRESENTE) === */}
+      {/* === NAVBAR DESKTOP === */}
       <div
         className="is-hidden-mobile tabs is-toggle is-centered is-boxed"
         style={{
@@ -34,6 +32,9 @@ export default function TabsMenu() {
           <li className={location.pathname.startsWith("/startnow") ? "is-active" : ""}>
             <Link to="/startnow" className="has-text-white">Start Now</Link>
           </li>
+          <li className={location.pathname === "/training" ? "is-active" : ""}>
+            <Link to="/training" className="has-text-white">Training Plan</Link>
+          </li>
           <li className={location.pathname === "/references" ? "is-active" : ""}>
             <Link to="/references" className="has-text-white">References</Link>
           </li>
@@ -46,7 +47,7 @@ export default function TabsMenu() {
         </ul>
       </div>
 
-      {/* === MOBILE MENU === */}
+      {/* === NAVBAR MOBILE === */}
       <div
         className="is-hidden-tablet"
         style={{
@@ -66,11 +67,11 @@ export default function TabsMenu() {
             ☰
           </button>
         </div>
-
         {isOpen && (
           <div className="mt-3">
             <Link to="/" onClick={closeMenu} className="navbar-item has-text-white is-block py-2">Home</Link>
             <Link to="/startnow" onClick={closeMenu} className="navbar-item has-text-white is-block py-2">Start Now</Link>
+            <Link to="/training" onClick={closeMenu} className="navbar-item has-text-white is-block py-2">Training Plan</Link>
             <Link to="/references" onClick={closeMenu} className="navbar-item has-text-white is-block py-2">References</Link>
             <Link to="/nutrition" onClick={closeMenu} className="navbar-item has-text-white is-block py-2">Nutrition</Link>
             <Link to="/contact" onClick={closeMenu} className="navbar-item has-text-white is-block py-2">Contact</Link>
