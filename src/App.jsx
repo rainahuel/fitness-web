@@ -6,7 +6,8 @@ import StartNow from "./pages/StartNow";
 import References from "./pages/References";
 import Nutrition from "./pages/Nutrition";
 import TabsMenu from "./components/TabsMenu";
-import WorkoutGenerator from "./pages/WorkoutGenerator"; // Usaremos solo esto
+import WorkoutGenerator from "./pages/WorkoutGenerator"; 
+import MealPlanner from "./pages/MealPlanner";
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/references" element={<References />} />
           <Route path="/nutrition" element={<Nutrition />} />
+          <Route path="/meal-planner" element={<MealPlanner />} />
         </Routes>
       </div>
     </Router>
