@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import helmsData from "../data/helms-routines-full";
-import schoenfeldData from "../data/schoenfeld-routines-full";
+import helmsData from "../data/workout/helms-routines-full";
+import schoenfeldData from "../data/workout/schoenfeld-routines-full";
 
 (jsPDF as any).autoTable = autoTable;
 
@@ -39,28 +39,38 @@ export default function WorkoutGenerator() {
   
     const doc = new jsPDF();
   
+    const methodName = method.charAt(0).toUpperCase() + method.slice(1);
+    const goalName = goal.replace(/([A-Z])/g, " $1");
+    const fileName = `training-plan-${method}-${goal}-${daysPerWeek}days.pdf`;
+  
     doc.setFontSize(14);
-    doc.text(`Training Plan`, 10, 10);
+    doc.text("Personalized Training Plan", 10, 10);
+  
+    doc.setFontSize(11);
+    doc.text(`Method: ${methodName}`, 10, 18);
+    doc.text(`Goal: ${goalName}`, 10, 24);
+    doc.text(`Level: ${level.charAt(0).toUpperCase() + level.slice(1)}`, 10, 30);
+    doc.text(`Training Days/Week: ${daysPerWeek}`, 10, 36);
+  
     doc.setFontSize(10);
-    doc.text(`Method: ${method.toUpperCase()}`, 10, 18);
-    doc.text(`Goal: ${goal.toUpperCase()}`, 10, 24);
-    doc.text(`Level: ${level.toUpperCase()}`, 10, 30);
-    doc.text(`Days/Week: ${daysPerWeek}`, 10, 36);
+    doc.setTextColor(100);
+    doc.text(methodDescriptions[method], 10, 45, { maxWidth: 190 });
   
-    let y = 45;
+    let y = 60;
   
-    routine.forEach((day) => {
+    routine.forEach((day, index) => {
       doc.setFontSize(12);
-      doc.text(`${day.day} - ${day.focus}`, 10, y);
+      doc.setTextColor(0);
+      doc.text(`${day.day} – ${day.focus}`, 10, y);
       y += 6;
   
+      doc.setFontSize(10);
+      doc.setTextColor(50);
       day.exercises.forEach((ex: any) => {
-        doc.setFontSize(10);
-        doc.text(
-          `• ${ex.name} — Sets: ${ex.sets}, Reps: ${ex.reps}, Rest: ${ex.rest}`,
-          12,
-          y
-        );
+        doc.text(`• ${ex.name}`, 12, y);
+        doc.text(`Sets: ${ex.sets}`, 100, y);
+        doc.text(`Reps: ${ex.reps}`, 130, y);
+        doc.text(`Rest: ${ex.rest}`, 160, y);
         y += 5;
         if (y > 280) {
           doc.addPage();
@@ -71,8 +81,9 @@ export default function WorkoutGenerator() {
       y += 8;
     });
   
-    doc.save("training_plan.pdf");
+    doc.save(fileName);
   };
+  
   
 
   return (
