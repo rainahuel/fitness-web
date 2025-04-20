@@ -1,31 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import helmsData from "../data/workout/helms-routines-full";
-import schoenfeldData from "../data/workout/schoenfeld-routines-full";
+import methodsConfig from "../data/workout/methods-config";
 
 (jsPDF as any).autoTable = autoTable;
 
 export default function WorkoutGenerator() {
-  const [method, setMethod] = useState("helms");
-  const [goal, setGoal] = useState("maintainMuscle");
+  const methodKeys = Object.keys(methodsConfig);
+  const [method, setMethod] = useState(methodKeys[0]);
+  const [goal, setGoal] = useState(methodsConfig[method].defaultGoal);
   const [level, setLevel] = useState("beginner");
-  const [daysPerWeek, setDaysPerWeek] = useState("4");
+  const [daysPerWeek, setDaysPerWeek] = useState(methodsConfig[method].defaultDays);
   const [routine, setRoutine] = useState<any[]>([]);
 
-  const methodSources: Record<string, any> = {
-    helms: helmsData["helms"],
-    schoenfeld: schoenfeldData["schoenfeld"]
-  };
-
-  const methodDescriptions: Record<string, string> = {
-    helms: "This training plan is based on principles from 'The Muscle and Strength Pyramid – Training' by Eric Helms. It can be adjusted to your experience and preferences.",
-    schoenfeld: "This training plan is inspired by scientific principles from Brad Schoenfeld's 'Science and Development of Muscle Hypertrophy'. You can modify the routine progressively as needed."
-  };
+  useEffect(() => {
+    setGoal(methodsConfig[method].defaultGoal);
+    setDaysPerWeek(methodsConfig[method].defaultDays);
+  }, [method]);
 
   const generateRoutine = () => {
-    const source = methodSources[method];
+    const source = methodsConfig[method].data;
     const routineSet = source?.[goal]?.[level]?.[daysPerWeek];
+
     if (routineSet) {
       setRoutine(routineSet);
     } else {
@@ -36,34 +32,33 @@ export default function WorkoutGenerator() {
 
   const downloadPDF = () => {
     if (!routine.length) return;
-  
+
     const doc = new jsPDF();
-  
-    const methodName = method.charAt(0).toUpperCase() + method.slice(1);
+    const methodName = methodsConfig[method].name;
     const goalName = goal.replace(/([A-Z])/g, " $1");
     const fileName = `training-plan-${method}-${goal}-${daysPerWeek}days.pdf`;
-  
+
     doc.setFontSize(14);
     doc.text("Personalized Training Plan", 10, 10);
-  
+
     doc.setFontSize(11);
     doc.text(`Method: ${methodName}`, 10, 18);
     doc.text(`Goal: ${goalName}`, 10, 24);
     doc.text(`Level: ${level.charAt(0).toUpperCase() + level.slice(1)}`, 10, 30);
     doc.text(`Training Days/Week: ${daysPerWeek}`, 10, 36);
-  
+
     doc.setFontSize(10);
     doc.setTextColor(100);
-    doc.text(methodDescriptions[method], 10, 45, { maxWidth: 190 });
-  
+    doc.text(methodsConfig[method].description, 10, 45, { maxWidth: 190 });
+
     let y = 60;
-  
-    routine.forEach((day, index) => {
+
+    routine.forEach((day) => {
       doc.setFontSize(12);
       doc.setTextColor(0);
       doc.text(`${day.day} – ${day.focus}`, 10, y);
       y += 6;
-  
+
       doc.setFontSize(10);
       doc.setTextColor(50);
       day.exercises.forEach((ex: any) => {
@@ -77,14 +72,12 @@ export default function WorkoutGenerator() {
           y = 10;
         }
       });
-  
+
       y += 8;
     });
-  
+
     doc.save(fileName);
   };
-  
-  
 
   return (
     <section className="section centered-page">
@@ -96,8 +89,11 @@ export default function WorkoutGenerator() {
           <label className="label">Training Method</label>
           <div className="select is-fullwidth">
             <select value={method} onChange={(e) => setMethod(e.target.value)}>
-              <option value="helms">Eric Helms</option>
-              <option value="schoenfeld">Brad Schoenfeld</option>
+              {methodKeys.map((key) => (
+                <option key={key} value={key}>
+                  {methodsConfig[key].name}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -107,10 +103,11 @@ export default function WorkoutGenerator() {
           <label className="label">Training Goal</label>
           <div className="select is-fullwidth">
             <select value={goal} onChange={(e) => setGoal(e.target.value)}>
-              <option value="loseFat">Lose Fat</option>
-              <option value="maintainMuscle">Maintain Muscle</option>
-              <option value="gainStrength">Gain Strength</option>
-              <option value="buildMuscle">Build Muscle</option>
+              {methodsConfig[method].goals.map((goalOption) => (
+                <option key={goalOption} value={goalOption}>
+                  {goalOption.replace(/([A-Z])/g, " $1")}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -126,12 +123,12 @@ export default function WorkoutGenerator() {
           </div>
         </div>
 
-        {/* Training Days */}
+        {/* Days per Week */}
         <div className="field">
           <label className="label">Days per Week</label>
           <div className="select is-fullwidth">
             <select value={daysPerWeek} onChange={(e) => setDaysPerWeek(e.target.value)}>
-              {[3, 4, 5, 6].map((num) => (
+              {methodsConfig[method].daysPerWeek.map((num) => (
                 <option key={num} value={num}>{num} Days</option>
               ))}
             </select>
@@ -144,9 +141,11 @@ export default function WorkoutGenerator() {
           </button>
         </div>
 
+        {/* Display Routine */}
         {routine.length > 0 && (
           <div className="mt-5">
             <h3 className="title is-5 has-text-centered">Your Routine</h3>
+
             {routine.map((day, index) => (
               <div className="notification is-info" key={index}>
                 <strong>{day.day} – {day.focus}</strong>
@@ -173,9 +172,8 @@ export default function WorkoutGenerator() {
               </div>
             ))}
 
-            {/* Description based on method */}
             <div className="notification is-light mt-3 has-text-centered">
-              <p>{methodDescriptions[method]}</p>
+              <p>{methodsConfig[method].description}</p>
             </div>
 
             <div className="has-text-centered mt-4">
