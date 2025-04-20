@@ -2,6 +2,18 @@ import React, { useState } from "react";
 import jsPDF from "jspdf";
 import CalorieChart from "../components/CalorieChart";
 
+interface ResultData {
+  bmr: number;
+  tdee: number;
+  calories: number;
+  kgPerWeek: number;
+}
+
+interface ChartEntry {
+  label: string;
+  calories: number;
+}
+
 export default function CalorieCalculator() {
   const [formData, setFormData] = useState({
     age: "",
@@ -16,14 +28,8 @@ export default function CalorieCalculator() {
     cardio: "",
   });
 
-  const [result, setResult] = useState<{
-    bmr: number;
-    tdee: number;
-    calories: number;
-    kgPerWeek: number;
-  } | null>(null);
-
-  const [chartData, setChartData] = useState<{ label: string; calories: number }[]>([]);
+  const [result, setResult] = useState<ResultData | null>(null);
+  const [chartData, setChartData] = useState<ChartEntry[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -31,19 +37,7 @@ export default function CalorieCalculator() {
   };
 
   const calculate = () => {
-    const {
-      age,
-      weight,
-      height,
-      gender,
-      goal,
-      sleep,
-      sitting,
-      walking,
-      strength,
-      cardio,
-    } = formData;
-
+    const { age, weight, height, gender, goal, sleep, sitting, walking, strength, cardio } = formData;
     const w = parseFloat(weight);
     const h = parseFloat(height);
     const a = parseInt(age);
@@ -63,10 +57,9 @@ export default function CalorieCalculator() {
     const strengthHours = strengthMinutes / 60;
     const cardioHours = cardioMinutes / 60;
 
-    const bmr =
-      gender === "male"
-        ? 10 * w + 6.25 * h - 5 * a + 5
-        : 10 * w + 6.25 * h - 5 * a - 161;
+    const bmr = gender === "male"
+      ? 10 * w + 6.25 * h - 5 * a + 5
+      : 10 * w + 6.25 * h - 5 * a - 161;
 
     const sleepCalories = sleepHours * w * 0.95;
     const sittingCalories = sittingHours * w * 1.3;
@@ -74,13 +67,7 @@ export default function CalorieCalculator() {
     const strengthCalories = strengthHours * w * 6.5;
     const cardioCalories = cardioHours * w * 9;
 
-    const tdee =
-      bmr +
-      sleepCalories +
-      sittingCalories +
-      walkingCalories +
-      strengthCalories +
-      cardioCalories;
+    const tdee = bmr + sleepCalories + sittingCalories + walkingCalories + strengthCalories + cardioCalories;
 
     let calories = tdee;
     let kcalDiff = 0;
@@ -96,8 +83,7 @@ export default function CalorieCalculator() {
       kcalDiff = calories - tdee;
     }
 
-    const kgPerWeek =
-      kcalDiff > 0 ? +(kcalDiff * 7 / 7700).toFixed(2) : 0;
+    const kgPerWeek = kcalDiff > 0 ? +(kcalDiff * 7 / 7700).toFixed(2) : 0;
 
     setResult({
       bmr: Math.round(bmr),
@@ -131,12 +117,7 @@ export default function CalorieCalculator() {
 
   const copyResults = () => {
     if (!result) return;
-    const summary = `
-BMR: ${result.bmr} kcal
-TDEE: ${result.tdee} kcal
-Recommended Calories: ${result.calories} kcal/day
-${formData.goal !== "maintenance" ? `Estimated ${formData.goal.includes("deficit") ? "weight loss" : "weight gain"}: ${result.kgPerWeek} kg/week` : ""}
-    `.trim();
+    const summary = `\nBMR: ${result.bmr} kcal\nTDEE: ${result.tdee} kcal\nRecommended Calories: ${result.calories} kcal/day\n${formData.goal !== "maintenance" ? `Estimated ${formData.goal.includes("deficit") ? "weight loss" : "weight gain"}: ${result.kgPerWeek} kg/week` : ""}`.trim();
     navigator.clipboard.writeText(summary);
     alert("Results copied to clipboard!");
   };
@@ -151,7 +132,7 @@ ${formData.goal !== "maintenance" ? `Estimated ${formData.goal.includes("deficit
   return (
     <>
       <section className="section" style={{ paddingTop: "2rem" }}>
-        <div className="box" style={{ maxWidth: "900px", margin: "0 auto" }}>
+        <div className="box box-content">
           <h2 className="title is-4 has-text-centered">Calorie Calculator</h2>
 
           <div className="columns is-multiline is-variable is-4">

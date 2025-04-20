@@ -3,9 +3,20 @@ import React from "react";
 export default function References() {
   return (
     <section className="section centered-page">
-      <div className="box box-content">
-        <h2 className="title is-4 has-text-centered">Scientific References</h2>
-        <p className="mb-4">
+      <div
+        className="box box-content"
+        style={{
+          backgroundColor: "rgba(255, 255, 255, 0.05)",
+          border: "1px solid rgba(255, 255, 255, 0.1)",
+          color: "#ffffff",
+          padding: "2rem",
+          borderRadius: "12px",
+          boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
+          backdropFilter: "blur(8px)"
+        }}
+      >
+        <h2 className="title is-3 has-text-centered" style={{ color: "#ffffff", fontWeight: 800 }}>Scientific References</h2>
+        <p className="mb-4" style={{ color: "#e2e8f0" }}>
           These references are here to help you better understand how to train, eat, and recover.
           Every body is different — there’s no single formula that works for everyone.
           But having science-based foundations gives you a solid starting point to build your own path with confidence.
@@ -52,7 +63,8 @@ export default function References() {
           <li className="mt-3">
             <strong>PHUL – Power Hypertrophy Upper Lower:</strong><br />
             A popular online method combining strength and hypertrophy work.<br />
-            Reference guide: <a href="https://www.muscleandstrength.com/workouts/phul-workout" target="_blank" rel="noopener noreferrer">
+            Reference guide:{" "}
+            <a href="https://www.muscleandstrength.com/workouts/phul-workout" target="_blank" rel="noopener noreferrer">
               PHUL Workout on Muscle & Strength
             </a>
           </li>
