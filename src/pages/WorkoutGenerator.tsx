@@ -81,12 +81,12 @@ export default function WorkoutGenerator() {
 
   return (
     <section className="section centered-page">
-      <div className="box box-content">
-        <h2 className="title is-4 has-text-centered">Generate Your Training Plan</h2>
+      <div className="box box-content has-text-left" style={{ backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 8px 24px rgba(0,0,0,0.2)", backdropFilter: "blur(8px)", borderRadius: "12px", color: "#ffffff" }}>
+        <h2 className="title is-3 has-text-centered" style={{ color: "#ffffff", fontWeight: 800, textShadow: "1px 1px 2px rgba(0,0,0,0.4)" }}>Generate Your Training Plan</h2>
 
         {/* Training Method */}
         <div className="field">
-          <label className="label">Training Method</label>
+          <label className="label" style={{ color: "#e2e8f0" }}>Training Method</label>
           <div className="select is-fullwidth">
             <select value={method} onChange={(e) => setMethod(e.target.value)}>
               {methodKeys.map((key) => (
@@ -100,7 +100,7 @@ export default function WorkoutGenerator() {
 
         {/* Training Goal */}
         <div className="field">
-          <label className="label">Training Goal</label>
+          <label className="label" style={{ color: "#e2e8f0" }}>Training Goal</label>
           <div className="select is-fullwidth">
             <select value={goal} onChange={(e) => setGoal(e.target.value)}>
               {methodsConfig[method].goals.map((goalOption) => (
@@ -114,7 +114,7 @@ export default function WorkoutGenerator() {
 
         {/* Experience Level */}
         <div className="field">
-          <label className="label">Experience Level</label>
+          <label className="label" style={{ color: "#e2e8f0" }}>Experience Level</label>
           <div className="select is-fullwidth">
             <select value={level} onChange={(e) => setLevel(e.target.value)}>
               <option value="beginner">Beginner</option>
@@ -125,7 +125,7 @@ export default function WorkoutGenerator() {
 
         {/* Days per Week */}
         <div className="field">
-          <label className="label">Days per Week</label>
+          <label className="label" style={{ color: "#e2e8f0" }}>Days per Week</label>
           <div className="select is-fullwidth">
             <select value={daysPerWeek} onChange={(e) => setDaysPerWeek(e.target.value)}>
               {methodsConfig[method].daysPerWeek.map((num) => (
@@ -144,10 +144,10 @@ export default function WorkoutGenerator() {
         {/* Display Routine */}
         {routine.length > 0 && (
           <div className="mt-5">
-            <h3 className="title is-5 has-text-centered">Your Routine</h3>
+            <h3 className="title is-5 has-text-centered" style={{ color: "#ffffff" }}>Your Routine</h3>
 
             {routine.map((day, index) => (
-              <div className="notification is-info" key={index}>
+              <div className="notification is-info" key={index} style={{ backgroundColor: "#0ea5e9", color: "white" }}>
                 <strong>{day.day} – {day.focus}</strong>
                 <table className="table is-fullwidth mt-2">
                   <thead>
@@ -172,7 +172,7 @@ export default function WorkoutGenerator() {
               </div>
             ))}
 
-            <div className="notification is-light mt-3 has-text-centered">
+            <div className="notification is-light mt-3 has-text-centered" style={{ backgroundColor: "rgba(255,255,255,0.1)", color: "#e2e8f0" }}>
               <p>{methodsConfig[method].description}</p>
             </div>
 

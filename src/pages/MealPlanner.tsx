@@ -3,44 +3,22 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import foods from "../data/nutrition/nutrition-foods";
 
-interface FoodItem {
-  name: string;
-  calories: number;
-  protein: number;
-  carbs: number;
-  fat: number;
-}
-
-interface Meal {
-  protein: FoodItem;
-  carb: FoodItem;
-  fat: FoodItem;
-  veggie: FoodItem;
-  fruit: FoodItem | null;
-  label: string | null;
-  proteinGrams: number;
-  carbGrams: number;
-  fatGrams: number;
-  totalCalories: number;
-}
-
 (jsPDF as any).autoTable = autoTable;
 
 export default function MealPlanner() {
   const [calories, setCalories] = useState<number>(2000);
   const [goal, setGoal] = useState<string>("maintainMuscle");
   const [mealsPerDay, setMealsPerDay] = useState<number>(5);
-  const [generatedMeals, setGeneratedMeals] = useState<Meal[]>([]);
+  const [generatedMeals, setGeneratedMeals] = useState<any[]>([]);
 
   const goalMacros = {
     loseFat: { protein: 40, carbs: 30, fat: 30 },
     maintainMuscle: { protein: 30, carbs: 40, fat: 30 },
-    buildMuscle: { protein: 30, carbs: 50, fat: 20 },
+    buildMuscle: { protein: 30, carbs: 50, fat: 20 }
   };
 
   const generateMeals = () => {
     const { protein, carbs, fat } = goalMacros[goal as keyof typeof goalMacros];
-
     const totalProtein = ((calories * protein) / 100) / 4;
     const totalCarbs = ((calories * carbs) / 100) / 4;
     const totalFat = ((calories * fat) / 100) / 9;
@@ -49,7 +27,7 @@ export default function MealPlanner() {
     const carbPerMeal = totalCarbs / mealsPerDay;
     const fatPerMeal = totalFat / mealsPerDay;
 
-    const meals: Meal[] = [];
+    const meals: any[] = [];
     const fruitIndex = Math.floor(Math.random() * mealsPerDay);
     const fruitTiming = Math.random() < 0.5 ? "Pre-Workout" : "Post-Workout";
 
@@ -65,18 +43,7 @@ export default function MealPlanner() {
       const fatGrams = parseFloat(fatPerMeal.toFixed(1));
       const totalCalories = parseFloat(((proteinGrams * 4) + (carbGrams * 4) + (fatGrams * 9)).toFixed(1));
 
-      meals.push({
-        protein,
-        carb,
-        fat,
-        veggie,
-        fruit,
-        label: fruit ? `(${fruitTiming})` : null,
-        proteinGrams,
-        carbGrams,
-        fatGrams,
-        totalCalories
-      });
+      meals.push({ protein, carb, fat, veggie, fruit, label: fruit ? `(${fruitTiming})` : null, proteinGrams, carbGrams, fatGrams, totalCalories });
     }
 
     setGeneratedMeals(meals);
@@ -84,93 +51,68 @@ export default function MealPlanner() {
 
   const downloadPDF = () => {
     if (!generatedMeals.length) return;
-  
+
     const doc = new jsPDF();
     const { protein, carbs, fat } = goalMacros[goal as keyof typeof goalMacros];
-  
     doc.setFontSize(12);
     doc.text(`Meal Plan – ${goal.replace(/([A-Z])/g, " $1")} – ${calories} kcal/day`, 10, 10);
-  
     doc.setFontSize(10);
-    doc.text(
-      "This is a standard meal plan based on your selected goal.\n" +
-      "You can adjust it as needed. Macronutrient ratios are based on general guidelines.",
-      10,
-      18
-    );
-  
-    doc.text(
-      `Macro Distribution: Protein ${protein}%, Carbs ${carbs}%, Fats ${fat}%`,
-      10,
-      28
-    );
-  
+    doc.text("This is a standard meal plan based on your selected goal.\nYou can adjust it as needed. Macronutrient ratios are based on general guidelines.", 10, 18);
+    doc.text(`Macro Distribution: Protein ${protein}%, Carbs ${carbs}%, Fats ${fat}%`, 10, 28);
+
     let y = 38;
-  
     generatedMeals.forEach((meal, i) => {
       doc.setFont(undefined, "bold");
       doc.text(`Meal ${i + 1} ${meal.label || ""}`, 10, y);
       y += 6;
-  
       doc.setFont(undefined, "normal");
-  
       const rows = [
         [`Protein: ${meal.protein.name}`, `${meal.proteinGrams}g`],
         [`Carb: ${meal.carb.name}`, `${meal.carbGrams}g`],
         [`Fat: ${meal.fat.name}`, `${meal.fatGrams}g`],
-        [`Vegetable: ${meal.veggie.name}`, `as desired`],
+        [`Vegetable: ${meal.veggie.name}`, `as desired`]
       ];
-  
-      if (meal.fruit) {
-        rows.push([`Fruit: ${meal.fruit.name}`, `~1 handful`]);
-      }
-  
+      if (meal.fruit) rows.push([`Fruit: ${meal.fruit.name}`, `~1 handful`]);
       rows.push([`Total Calories`, `${meal.totalCalories} kcal`]);
-  
       rows.forEach(([label, value]) => {
         doc.text(`${label} - ${value}`, 12, y);
         y += 6;
       });
-  
       y += 6;
-  
-      if (y > 260) {
-        doc.addPage();
-        y = 10;
-      }
+      if (y > 260) { doc.addPage(); y = 10; }
     });
-  
-    // References
-    if (y > 240) {
-      doc.addPage();
-      y = 10;
-    }
-  
+
+    if (y > 240) { doc.addPage(); y = 10; }
     doc.setFont(undefined, "bold");
     doc.text("Scientific References", 10, y);
     doc.setFont(undefined, "normal");
     y += 6;
-  
     const references = [
       "– Helms ER, et al. (2014). JISSN – Evidence-based recommendations for fat loss.",
       "– Trexler ET, et al. (2019). JISSN – Body composition in sport.",
       "– Morton RW, et al. (2018). PubMed – Protein intake for muscle growth."
     ];
-  
-    references.forEach(ref => {
-      doc.text(ref, 10, y);
-      y += 5;
-    });
-  
+    references.forEach(ref => { doc.text(ref, 10, y); y += 5; });
+
     const fileName = `meal-plan-${goal}-${calories}kcal.pdf`;
     doc.save(fileName);
   };
 
-  
   return (
     <section className="section centered-page">
-      <div className="box box-content">
-        <h2 className="title is-4 has-text-centered">Generate a Sample Meal Plan</h2>
+      <div
+        className="box box-content"
+        style={{
+          backgroundColor: "rgba(255, 255, 255, 0.05)",
+          border: "1px solid rgba(255, 255, 255, 0.1)",
+          color: "#ffffff",
+          padding: "2rem",
+          borderRadius: "12px",
+          boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
+          backdropFilter: "blur(8px)"
+        }}
+      >
+        <h2 className="title is-3 has-text-centered" style={{ fontWeight: 800 }}>Generate a Sample Meal Plan</h2>
 
         <div className="field">
           <label className="label">Calories per Day</label>

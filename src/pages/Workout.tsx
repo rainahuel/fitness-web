@@ -8,5 +8,5 @@ export default function Workout() {
     navigate("/generator");
   }, [navigate]);
 
-  return null; // No mostramos nada, solo redirige automáticamente
+  return null; 
 }
