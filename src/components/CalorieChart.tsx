@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -18,20 +18,35 @@ interface CalorieChartProps {
 }
 
 const CalorieChart: React.FC<CalorieChartProps> = ({ data }) => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 480);
+    };
+
+    handleResize(); // initial check
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
-    <div style={{ width: "100%", height: 450 }}>
+    <div style={{ width: "100%", height: isMobile ? 500 : 450 }}>
       <ResponsiveContainer>
         <BarChart
           data={data}
-          margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
+          margin={{ top: 20, right: 20, left: 10, bottom: isMobile ? 100 : 70 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="label"
-            angle={-30}
+            angle={isMobile ? -45 : -30}
             textAnchor="end"
             interval={0}
-            height={60} // extra espacio para los labels
+            height={isMobile ? 80 : 60}
           />
           <YAxis />
           <Tooltip />
@@ -42,6 +57,5 @@ const CalorieChart: React.FC<CalorieChartProps> = ({ data }) => {
     </div>
   );
 };
-
 
 export default CalorieChart;
