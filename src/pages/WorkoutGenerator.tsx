@@ -32,52 +32,73 @@ export default function WorkoutGenerator() {
 
   const downloadPDF = () => {
     if (!routine.length) return;
-
+  
     const doc = new jsPDF();
     const methodName = methodsConfig[method].name;
     const goalName = goal.replace(/([A-Z])/g, " $1");
     const fileName = `training-plan-${method}-${goal}-${daysPerWeek}days.pdf`;
-
+  
     doc.setFontSize(14);
     doc.text("Personalized Training Plan", 10, 10);
-
+  
     doc.setFontSize(11);
     doc.text(`Method: ${methodName}`, 10, 18);
     doc.text(`Goal: ${goalName}`, 10, 24);
     doc.text(`Level: ${level.charAt(0).toUpperCase() + level.slice(1)}`, 10, 30);
     doc.text(`Training Days/Week: ${daysPerWeek}`, 10, 36);
-
+  
     doc.setFontSize(10);
     doc.setTextColor(100);
     doc.text(methodsConfig[method].description, 10, 45, { maxWidth: 190 });
-
+  
     let y = 60;
-
+  
     routine.forEach((day) => {
       doc.setFontSize(12);
       doc.setTextColor(0);
       doc.text(`${day.day} – ${day.focus}`, 10, y);
       y += 6;
-
-      doc.setFontSize(10);
-      doc.setTextColor(50);
-      day.exercises.forEach((ex: any) => {
-        doc.text(`• ${ex.name}`, 12, y);
-        doc.text(`Sets: ${ex.sets}`, 100, y);
-        doc.text(`Reps: ${ex.reps}`, 130, y);
-        doc.text(`Rest: ${ex.rest}`, 160, y);
-        y += 5;
-        if (y > 280) {
-          doc.addPage();
-          y = 10;
-        }
-      });
-
-      y += 8;
+  
+      if (methodsConfig[method].type === "interval") {
+        day.blocks.forEach((block: any) => {
+          doc.setFontSize(11);
+          doc.text(block.name, 12, y);
+          y += 5;
+  
+          block.exercises.forEach((ex: any) => {
+            doc.setFontSize(10);
+            doc.text(`• ${ex.name}`, 14, y);
+            doc.text(`Work: ${ex.work}`, 70, y);
+            doc.text(`Rest: ${ex.rest}`, 110, y);
+            doc.text(`Rounds: ${ex.rounds}`, 150, y);
+            y += 5;
+            if (y > 280) {
+              doc.addPage();
+              y = 10;
+            }
+          });
+          y += 5;
+        });
+      } else {
+        day.exercises.forEach((ex: any) => {
+          doc.setFontSize(10);
+          doc.text(`• ${ex.name}`, 14, y);
+          doc.text(`Sets: ${ex.sets}`, 70, y);
+          doc.text(`Reps: ${ex.reps}`, 110, y);
+          doc.text(`Rest: ${ex.rest}`, 150, y);
+          y += 5;
+          if (y > 280) {
+            doc.addPage();
+            y = 10;
+          }
+        });
+        y += 8;
+      }
     });
-
+  
     doc.save(fileName);
   };
+  
 
   return (
     <section className="section centered-page">
@@ -149,28 +170,62 @@ export default function WorkoutGenerator() {
             {routine.map((day, index) => (
               <div className="notification is-info" key={index} style={{ backgroundColor: "#0ea5e9", color: "white" }}>
                 <strong>{day.day} – {day.focus}</strong>
-                <table className="table is-fullwidth mt-2">
-                  <thead>
-                    <tr>
-                      <th>Exercise</th>
-                      <th>Sets</th>
-                      <th>Reps</th>
-                      <th>Rest</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {day.exercises.map((ex: any, i: number) => (
-                      <tr key={i}>
-                        <td>{ex.name}</td>
-                        <td>{ex.sets}</td>
-                        <td>{ex.reps}</td>
-                        <td>{ex.rest}</td>
-                      </tr>
+
+                {/* Interval-based routines */}
+                {methodsConfig[method].type === "interval" ? (
+                  <div className="mt-2">
+                    {day.blocks.map((block, bIndex) => (
+                      <div key={bIndex}>
+                        <p><strong>{block.name}</strong></p>
+                        <table className="table is-fullwidth mt-1">
+                          <thead>
+                            <tr>
+                              <th>Exercise</th>
+                              <th>Work</th>
+                              <th>Rest</th>
+                              <th>Rounds</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {block.exercises.map((ex, i) => (
+                              <tr key={i}>
+                                <td>{ex.name}</td>
+                                <td>{ex.work}</td>
+                                <td>{ex.rest}</td>
+                                <td>{ex.rounds}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     ))}
-                  </tbody>
-                </table>
+                  </div>
+                ) : (
+                  // Traditional routines
+                  <table className="table is-fullwidth mt-2">
+                    <thead>
+                      <tr>
+                        <th>Exercise</th>
+                        <th>Sets</th>
+                        <th>Reps</th>
+                        <th>Rest</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {day.exercises.map((ex: any, i: number) => (
+                        <tr key={i}>
+                          <td>{ex.name}</td>
+                          <td>{ex.sets}</td>
+                          <td>{ex.reps}</td>
+                          <td>{ex.rest}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
               </div>
             ))}
+
 
             <div className="notification is-light mt-3 has-text-centered" style={{ backgroundColor: "rgba(255,255,255,0.1)", color: "#e2e8f0" }}>
               <p>{methodsConfig[method].description}</p>

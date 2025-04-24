@@ -24,6 +24,7 @@ export default function References() {
 
         <h3 className="title is-5 mt-4">Training Methods</h3>
         <ul>
+
           <li>
             <strong>Helms Method:</strong><br />
             Helms ER, Zourdos MC, Aragon AA (2017).{" "}
@@ -68,6 +69,26 @@ export default function References() {
               PHUL Workout on Muscle & Strength
             </a>
           </li>
+
+          <li className="mt-3">
+            <strong>HIIT – High-Intensity Interval Training:</strong><br />
+            Laursen PB, Buchheit M (2018).{" "}
+            <a href="https://www.humankinetics.com/products/science-and-application-of-high-intensity-interval-training" target="_blank" rel="noopener noreferrer">
+              Science and Application of High-Intensity Interval Training.
+            </a><br />
+            Comprehensive guide to interval training for fat loss, endurance, and performance.
+          </li>
+
+          <li className="mt-3">
+            <strong>Tabata Protocol:</strong><br />
+            Tabata I, Nishimura K, Kouzaki M, et al. (1996).{" "}
+            <a href="https://pubmed.ncbi.nlm.nih.gov/8897392/" target="_blank" rel="noopener noreferrer">
+              Effects of moderate-intensity endurance and high-intensity intermittent training on anaerobic capacity and VO2max.
+            </a><br />
+            Original research introducing the 20s/10s Tabata protocol, proven to improve aerobic and anaerobic fitness.
+          </li>
+
+
         </ul>
 
         <h3 className="title is-5 mt-5">Macro Calculator</h3>
