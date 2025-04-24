@@ -3,6 +3,8 @@ import schoenfeldData from "./schoenfeld-routines-full";
 import startingStrengthData from "./starting-strength-routines";
 import gvtData from "./gvt-routines-full";
 import phulData from "./phul-routines-full";
+import hiitData from "./hiit-laursen-buchheit";
+import tabataData from "./tabata-izumi";
 
 const methodsConfig = {
   helms: {
@@ -54,6 +56,28 @@ const methodsConfig = {
     description:
       "The PHUL training system (Power Hypertrophy Upper Lower) is designed to build strength and muscle by combining heavy compound lifts with hypertrophy-focused volume work across four sessions each week.",
     data: phulData["phul"]
+  },
+  hiit: {
+    name: "HIIT (Laursen & Buchheit)",
+    type: "interval",
+    goals: ["loseFat"],
+    defaultGoal: "loseFat",
+    daysPerWeek: [3, 4],
+    defaultDays: "3",
+    description:
+      "High-Intensity Interval Training based on 'Science and Application of High-Intensity Interval Training' by Laursen & Buchheit. Ideal for fat loss and cardiovascular fitness improvements.",
+    data: hiitData["hiit"]
+  },
+  tabata: {
+    name: "Tabata Protocol (Izumi Tabata)",
+    type: "interval",
+    goals: ["loseFat"],
+    defaultGoal: "loseFat",
+    daysPerWeek: [3, 4],
+    defaultDays: "3",
+    description:
+      "Tabata training is a high-intensity interval training method developed by Dr. Izumi Tabata. It involves 20 seconds of ultra-intense exercise followed by 10 seconds of rest, repeated for 8 rounds.",
+    data: tabataData["tabata"]
   }
 };
 
