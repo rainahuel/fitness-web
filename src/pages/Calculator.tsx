@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import jsPDF from "jspdf";
 import CalorieChart from "../components/CalorieChart";
+import { sendAnalyticsEvent } from "../analytics";
+import Swal from 'sweetalert2';
+
 
 interface ResultData {
   bmr: number;
@@ -41,37 +44,37 @@ export default function CalorieCalculator() {
     const w = parseFloat(weight);
     const h = parseFloat(height);
     const a = parseInt(age);
-
+  
     const sleepHours = parseFloat(sleep) || 0;
     const sittingHours = parseFloat(sitting) || 0;
     const walkingMinutes = parseFloat(walking) || 0;
     const strengthMinutes = parseFloat(strength) || 0;
     const cardioMinutes = parseFloat(cardio) || 0;
-
+  
     if (!w || !h || !a) {
-      alert("Please fill in all required fields.");
+      Swal.fire('Error!', 'Please fill in all required fields.', 'error');
       return;
     }
-
+  
     const walkingHours = walkingMinutes / 60;
     const strengthHours = strengthMinutes / 60;
     const cardioHours = cardioMinutes / 60;
-
+  
     const bmr = gender === "male"
       ? 10 * w + 6.25 * h - 5 * a + 5
       : 10 * w + 6.25 * h - 5 * a - 161;
-
+  
     const sleepCalories = sleepHours * w * 0.95;
     const sittingCalories = sittingHours * w * 1.3;
     const walkingCalories = walkingHours * w * 3.5;
     const strengthCalories = strengthHours * w * 6.5;
     const cardioCalories = cardioHours * w * 9;
-
+  
     const tdee = bmr + sleepCalories + sittingCalories + walkingCalories + strengthCalories + cardioCalories;
-
+  
     let calories = tdee;
     let kcalDiff = 0;
-
+  
     if (goal === "deficit") {
       calories = tdee * 0.85;
       kcalDiff = tdee - calories;
@@ -82,16 +85,16 @@ export default function CalorieCalculator() {
       calories = tdee * 1.1;
       kcalDiff = calories - tdee;
     }
-
+  
     const kgPerWeek = kcalDiff > 0 ? +(kcalDiff * 7 / 7700).toFixed(2) : 0;
-
+  
     setResult({
       bmr: Math.round(bmr),
       tdee: Math.round(tdee),
       calories: Math.round(calories),
       kgPerWeek,
     });
-
+  
     setChartData([
       { label: "BMR", calories: Math.round(bmr) },
       { label: "Sleep", calories: Math.round(sleepCalories) },
@@ -100,10 +103,38 @@ export default function CalorieCalculator() {
       { label: "Strength Training", calories: Math.round(strengthCalories) },
       { label: "Cardio", calories: Math.round(cardioCalories) },
     ]);
+  
+    sendAnalyticsEvent('calculate_calories', {
+      gender,
+      goal,
+      weight: w,
+      height: h,
+      age: a,
+      sleep_hours: sleepHours,
+      sitting_hours: sittingHours,
+      walking_minutes: walkingMinutes,
+      strength_minutes: strengthMinutes,
+      cardio_minutes: cardioMinutes,
+    });
+  
+    Swal.fire('Success!', 'Calories calculated successfully.', 'success');
   };
+  
+  
 
   const downloadPDF = () => {
-    if (!result) return;
+    if (!result) {
+      Swal.fire('Error!', 'Please calculate your calories before downloading.', 'error');
+      return;
+    }
+  
+    sendAnalyticsEvent('download_calories_pdf', {
+      bmr: result.bmr,
+      tdee: result.tdee,
+      calories: result.calories,
+      kg_per_week: result.kgPerWeek,
+    });
+  
     const doc = new jsPDF();
     doc.text("Caloric Intake Recommendation", 10, 10);
     doc.text(`BMR: ${result.bmr} kcal`, 10, 20);
@@ -113,14 +144,21 @@ export default function CalorieCalculator() {
       doc.text(`Estimated weight change: ${result.kgPerWeek} kg/week`, 10, 50);
     }
     doc.save("calories.pdf");
+  
+    Swal.fire('Success!', 'Calories PDF downloaded successfully.', 'success');
   };
 
   const copyResults = () => {
-    if (!result) return;
+    if (!result) {
+      Swal.fire('Error!', 'Please calculate your calories before copying.', 'error');
+      return;
+    }
+  
     const summary = `\nBMR: ${result.bmr} kcal\nTDEE: ${result.tdee} kcal\nRecommended Calories: ${result.calories} kcal/day\n${formData.goal !== "maintenance" ? `Estimated ${formData.goal.includes("deficit") ? "weight loss" : "weight gain"}: ${result.kgPerWeek} kg/week` : ""}`.trim();
     navigator.clipboard.writeText(summary);
-    alert("Results copied to clipboard!");
+    Swal.fire('Success!', 'Results copied to clipboard.', 'success');
   };
+  
 
   const labelStyle = {
     minHeight: '3.5rem',

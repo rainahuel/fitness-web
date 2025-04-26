@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import methodsConfig from "../data/workout/methods-config";
+import { sendAnalyticsEvent } from "../analytics"; 
+import Swal from 'sweetalert2';
+
+
 
 (jsPDF as any).autoTable = autoTable;
 
@@ -21,17 +25,36 @@ export default function WorkoutGenerator() {
   const generateRoutine = () => {
     const source = methodsConfig[method].data;
     const routineSet = source?.[goal]?.[level]?.[daysPerWeek];
-
+  
     if (routineSet) {
       setRoutine(routineSet);
+      sendAnalyticsEvent('generate_routine', {
+        method,
+        goal,
+        level,
+        days_per_week: daysPerWeek
+      });
+      Swal.fire('Success!', 'Routine generated successfully.', 'success');
     } else {
       setRoutine([]);
-      alert("No routine found for selected options.");
+      Swal.fire('Error!', 'No routine found for selected options.', 'error');
     }
   };
+  
+  
 
   const downloadPDF = () => {
-    if (!routine.length) return;
+    if (!routine.length) {
+      Swal.fire('Error!', 'You must generate a routine before downloading.', 'error');
+      return;
+    }
+  
+    sendAnalyticsEvent('download_routine_pdf', {
+      method,
+      goal,
+      level,
+      days_per_week: daysPerWeek
+    });
   
     const doc = new jsPDF();
     const methodName = methodsConfig[method].name;
@@ -97,7 +120,11 @@ export default function WorkoutGenerator() {
     });
   
     doc.save(fileName);
+  
+    Swal.fire('Success!', 'Routine PDF downloaded successfully.', 'success');
   };
+  
+  
   
 
   return (

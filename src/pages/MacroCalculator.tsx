@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import jsPDF from "jspdf";
+import { sendAnalyticsEvent } from "../analytics"; 
+import Swal from 'sweetalert2';
+
+
 
 export default function MacroCalculator() {
   const [weight, setWeight] = useState("");
@@ -10,15 +14,15 @@ export default function MacroCalculator() {
   const calculateMacros = () => {
     const w = parseFloat(weight);
     const cal = parseInt(calories);
-
+  
     if (!w || !cal || cal < 1000) {
-      alert("Please enter valid values for weight and calories.");
+      Swal.fire('Error!', 'Please enter valid values for weight and calories.', 'error');
       return;
     }
-
+  
     let proteinPerKg = 2.2;
     let fatPerKg = 0.8;
-
+  
     if (goal === "maintenance") {
       proteinPerKg = 2.0;
       fatPerKg = 1.0;
@@ -26,27 +30,46 @@ export default function MacroCalculator() {
       proteinPerKg = 1.8;
       fatPerKg = 1.2;
     }
-
+  
     const proteinGrams = Math.round(w * proteinPerKg);
     const fatGrams = Math.round(w * fatPerKg);
     const proteinCals = proteinGrams * 4;
     const fatCals = fatGrams * 9;
-
+  
     const remainingCals = cal - (proteinCals + fatCals);
     const carbGrams = Math.round(remainingCals / 4);
-
+  
     const data = {
       proteinGrams,
       fatGrams,
       carbGrams,
       calories: cal
     };
-
+  
     setResult(data);
+  
+    sendAnalyticsEvent('calculate_macros', {
+      goal,
+      weight: w,
+      daily_calories: cal
+    });
+  
+    Swal.fire('Success!', 'Macros calculated successfully.', 'success');
   };
-
+  
   const downloadPDF = () => {
-    if (!result) return;
+    if (!result) {
+      Swal.fire('Error!', 'Please calculate your macros before downloading.', 'error');
+      return;
+    }
+  
+    sendAnalyticsEvent('download_macro_plan', {
+      calories: result.calories,
+      protein: result.proteinGrams,
+      fat: result.fatGrams,
+      carbs: result.carbGrams
+    });
+  
     const doc = new jsPDF();
     doc.text("Built by Rain - Macro Plan (Goal-based)", 10, 10);
     doc.text(`Total Calories: ${result.calories}`, 10, 20);
@@ -54,7 +77,11 @@ export default function MacroCalculator() {
     doc.text(`Fat: ${result.fatGrams}g`, 10, 40);
     doc.text(`Carbohydrates: ${result.carbGrams}g`, 10, 50);
     doc.save("macro_plan.pdf");
+  
+    Swal.fire('Success!', 'Macro plan PDF downloaded successfully.', 'success');
   };
+  
+  
 
   return (
     <section className="section centered-page">
