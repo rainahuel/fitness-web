@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import foods from "../data/nutrition/nutrition-foods";
+import Swal from 'sweetalert2';
+import { sendAnalyticsEvent } from "../analytics";
+
 
 (jsPDF as any).autoTable = autoTable;
 
@@ -18,40 +21,61 @@ export default function MealPlanner() {
   };
 
   const generateMeals = () => {
+    if (!calories || calories < 1000) {
+      Swal.fire('Error!', 'Please enter a valid amount of daily calories (above 1000).', 'error');
+      return;
+    }
+    if (mealsPerDay < 3 || mealsPerDay > 6) {
+      Swal.fire('Error!', 'Meals per day must be between 3 and 6.', 'error');
+      return;
+    }
+  
     const { protein, carbs, fat } = goalMacros[goal as keyof typeof goalMacros];
     const totalProtein = ((calories * protein) / 100) / 4;
     const totalCarbs = ((calories * carbs) / 100) / 4;
     const totalFat = ((calories * fat) / 100) / 9;
-
+  
     const proteinPerMeal = totalProtein / mealsPerDay;
     const carbPerMeal = totalCarbs / mealsPerDay;
     const fatPerMeal = totalFat / mealsPerDay;
-
+  
     const meals: any[] = [];
     const fruitIndex = Math.floor(Math.random() * mealsPerDay);
     const fruitTiming = Math.random() < 0.5 ? "Pre-Workout" : "Post-Workout";
-
+  
     for (let i = 0; i < mealsPerDay; i++) {
       const protein = foods.proteins[Math.floor(Math.random() * foods.proteins.length)];
       const carb = foods.carbohydrates[Math.floor(Math.random() * foods.carbohydrates.length)];
       const fat = foods.fats[Math.floor(Math.random() * foods.fats.length)];
       const veggie = foods.vegetables[Math.floor(Math.random() * foods.vegetables.length)];
       const fruit = i === fruitIndex ? foods.fruits[Math.floor(Math.random() * foods.fruits.length)] : null;
-
+  
       const proteinGrams = parseFloat(proteinPerMeal.toFixed(1));
       const carbGrams = parseFloat(carbPerMeal.toFixed(1));
       const fatGrams = parseFloat(fatPerMeal.toFixed(1));
       const totalCalories = parseFloat(((proteinGrams * 4) + (carbGrams * 4) + (fatGrams * 9)).toFixed(1));
-
+  
       meals.push({ protein, carb, fat, veggie, fruit, label: fruit ? `(${fruitTiming})` : null, proteinGrams, carbGrams, fatGrams, totalCalories });
     }
-
+  
     setGeneratedMeals(meals);
+  
+    sendAnalyticsEvent('generate_meal_plan', {
+      calories,
+      goal,
+      meals_per_day: mealsPerDay,
+    });
+  
+    Swal.fire('Success!', 'Meal plan generated successfully.', 'success');
   };
+  
 
   const downloadPDF = () => {
-    if (!generatedMeals.length) return;
-
+    if (!generatedMeals.length) {
+      Swal.fire('Error!', 'Please generate a meal plan before downloading.', 'error');
+      return;
+    }
+  
     const doc = new jsPDF();
     const { protein, carbs, fat } = goalMacros[goal as keyof typeof goalMacros];
     doc.setFontSize(12);
@@ -59,7 +83,7 @@ export default function MealPlanner() {
     doc.setFontSize(10);
     doc.text("This is a standard meal plan based on your selected goal.\nYou can adjust it as needed. Macronutrient ratios are based on general guidelines.", 10, 18);
     doc.text(`Macro Distribution: Protein ${protein}%, Carbs ${carbs}%, Fats ${fat}%`, 10, 28);
-
+  
     let y = 38;
     generatedMeals.forEach((meal, i) => {
       doc.setFont(undefined, "bold");
@@ -81,7 +105,7 @@ export default function MealPlanner() {
       y += 6;
       if (y > 260) { doc.addPage(); y = 10; }
     });
-
+  
     if (y > 240) { doc.addPage(); y = 10; }
     doc.setFont(undefined, "bold");
     doc.text("Scientific References", 10, y);
@@ -93,10 +117,19 @@ export default function MealPlanner() {
       "– Morton RW, et al. (2018). PubMed – Protein intake for muscle growth."
     ];
     references.forEach(ref => { doc.text(ref, 10, y); y += 5; });
-
+  
     const fileName = `meal-plan-${goal}-${calories}kcal.pdf`;
     doc.save(fileName);
+  
+    sendAnalyticsEvent('download_meal_plan_pdf', {
+      calories,
+      goal,
+      meals_per_day: mealsPerDay,
+    });
+  
+    Swal.fire('Success!', 'Meal plan PDF downloaded successfully.', 'success');
   };
+  
 
   return (
     <section className="section centered-page">
