@@ -5,6 +5,7 @@ import gvtData from "./gvt-routines-full";
 import phulData from "./phul-routines-full";
 import hiitData from "./hiit-laursen-buchheit";
 import tabataData from "./tabata-izumi";
+import pplData from "./ppl-routines-full";
 
 const methodsConfig = {
   helms: {
@@ -78,6 +79,16 @@ const methodsConfig = {
     description:
       "Tabata training is a high-intensity interval training method developed by Dr. Izumi Tabata. It involves 20 seconds of ultra-intense exercise followed by 10 seconds of rest, repeated for 8 rounds.",
     data: tabataData["tabata"]
+  },
+  ppl: {
+    name: "Push Pull Legs (PPL)",
+    goals: ["loseFat", "buildMuscle", "gainStrength"],
+    defaultGoal: "buildMuscle",
+    daysPerWeek: [3, 4, 5, 6],
+    defaultDays: "6",
+    description:
+      "Push Pull Legs (PPL) is a proven method to build muscle and strength by focusing on movement patterns across multiple sessions each week. Adapted for fat loss, maintenance, or bulking phases.",
+    data: pplData["ppl"]
   }
 };
 
