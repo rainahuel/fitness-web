@@ -6,6 +6,9 @@ import phulData from "./phul-routines-full";
 import hiitData from "./hiit-laursen-buchheit";
 import tabataData from "./tabata-izumi";
 import pplData from "./ppl-routines-full";
+import wendlerData from "./wendler531-routines";
+import mapsAnabolicData from "./maps-anabolic-routines";
+import broSplitData from "./bro-split-routines";
 
 const methodsConfig = {
   helms: {
@@ -89,6 +92,36 @@ const methodsConfig = {
     description:
       "Push Pull Legs (PPL) is a proven method to build muscle and strength by focusing on movement patterns across multiple sessions each week. Adapted for fat loss, maintenance, or bulking phases.",
     data: pplData["ppl"]
+  },
+  wendler531: {
+    name: "5/3/1 (Jim Wendler)",
+    goals: ["gainStrength"],
+    defaultGoal: "gainStrength",
+    daysPerWeek: [3, 4],
+    defaultDays: "4",
+    description:
+      "Wendler's 5/3/1 is a strength training method based on a simple but effective progression model. Ideal for intermediate to advanced lifters focusing on core compound lifts and steady progress.",
+    data: wendlerData["wendler531"]
+  },
+  mapsAnabolic: {
+    name: "MAPS Anabolic (Mind Pump Media)",
+    goals: ["buildMuscle", "maintainMuscle"],
+    defaultGoal: "buildMuscle",
+    daysPerWeek: [3, 4, 5],
+    defaultDays: "3",
+    description:
+      "MAPS Anabolic is a phase-based training program that combines foundational strength, aesthetics, and mobility. Designed for long-term muscle development and joint health.",
+    data: mapsAnabolicData["mapsAnabolic"]
+  },
+  broSplit: {
+    name: "Bro Split (Classic Bodybuilding)",
+    goals: ["buildMuscle"],
+    defaultGoal: "buildMuscle",
+    daysPerWeek: [5, 6],
+    defaultDays: "5",
+    description:
+      "The classic Bro Split targets one muscle group per session, allowing maximum volume and focus. Ideal for aesthetic goals and hypertrophy, inspired by old-school bodybuilding routines.",
+    data: broSplitData["broSplit"]
   }
 };
 
