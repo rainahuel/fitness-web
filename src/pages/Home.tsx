@@ -43,6 +43,7 @@ export default function Home() {
           Whether you're starting from zero or making your comeback — this is
           your moment. No fluff. No shortcuts. Just progress, one day at a time.
         </p>
+
         <div className="mt-5">
           <Link
             to="/startnow"
@@ -58,6 +59,7 @@ export default function Home() {
           >
             🚀 Start Now
           </Link>
+
           <p
             style={{
               fontSize: "0.85rem",
@@ -67,6 +69,35 @@ export default function Home() {
           >
             Includes calorie calculator & workout builder
           </p>
+
+          {/* Redes sociales en estilo icon-text */}
+          <div className="mt-4 is-flex is-justify-content-center">
+            <a
+              href="https://www.youtube.com/@builtByRain"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="icon-text mr-4"
+              style={{ color: "#ffffff", fontSize: "1rem", marginRight: "1.5rem" }}
+            >
+              <span className="icon">
+                <i className="fab fa-youtube icon-youtube"></i>
+              </span>
+              <span>@builtByRain</span>
+            </a>
+
+            <a
+              href="https://www.instagram.com/builtByRain"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="icon-text"
+              style={{ color: "#ffffff", fontSize: "1rem" }}
+            >
+              <span className="icon">
+                <i className="fab fa-instagram icon-instagram"></i>
+              </span>
+              <span>@builtByRain</span>
+            </a>
+          </div>
         </div>
       </div>
     </section>
