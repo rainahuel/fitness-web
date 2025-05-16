@@ -69,7 +69,20 @@ const referencesData = {
           reference: "Tabata I, Nishimura K, Kouzaki M, et al. (1996)",
           link: "https://pubmed.ncbi.nlm.nih.gov/8897392/",
           extra: "Original research on the 20s/10s Tabata protocol improving aerobic and anaerobic fitness."
+        },
+        {
+          name: "Greyskull LP (GSLP)",
+          reference: "John Sheaffer (2010)",
+          link: "https://www.amazon.com/Greyskull-LP-Second-John-Sheaffer/dp/1517193477",
+          extra: "A linear progression program with customizable accessory work. Popular among beginners focused on strength gains."
+        },
+        {
+          name: "Upper/Lower Split",
+          reference: "Schoenfeld BJ, Grgic J (2019)",
+          link: "https://pubmed.ncbi.nlm.nih.gov/31188364/",
+          extra: "Research supports split training (like Upper/Lower) as effective for hypertrophy and strength, especially in trained individuals."
         }
+
       ]
     },
     {

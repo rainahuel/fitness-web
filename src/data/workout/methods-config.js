@@ -9,6 +9,8 @@ import pplData from "./ppl-routines-full";
 import wendlerData from "./wendler531-routines";
 import mapsAnabolicData from "./maps-anabolic-routines";
 import broSplitData from "./bro-split-routines";
+import greyskullData from "./greyskull-lp-data";
+import upperLowerSplitData from "./upper-lower-split-data";
 
 const methodsConfig = {
   helms: {
@@ -122,6 +124,26 @@ const methodsConfig = {
     description:
       "The classic Bro Split targets one muscle group per session, allowing maximum volume and focus. Ideal for aesthetic goals and hypertrophy, inspired by old-school bodybuilding routines.",
     data: broSplitData["broSplit"]
+  },
+  greyskullLP: {
+    name: "Greyskull LP (GSLP)",
+    goals: ["gainStrength", "buildMuscle"],
+    defaultGoal: "gainStrength",
+    daysPerWeek: [3, 4, 5],
+    defaultDays: "3",
+    description:
+      "Greyskull LP is a beginner-friendly strength progression method with customizable accessory work. Ideal for lifters focused on linear gains and simplicity.",
+    data: greyskullData["greyskullLP"]
+  },
+  upperLowerSplit: {
+    name: "Upper/Lower Split",
+    goals: ["loseFat", "maintainMuscle", "buildMuscle", "gainStrength"],
+    defaultGoal: "maintainMuscle",
+    daysPerWeek: [3, 4, 5],
+    defaultDays: "4",
+    description:
+      "Upper/Lower Split training organizes workouts by upper and lower body days. It balances strength and hypertrophy work efficiently across 3 to 5 days per week.",
+    data: upperLowerSplitData["upperLowerSplit"]
   }
 };
 
