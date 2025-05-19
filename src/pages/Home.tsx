@@ -85,18 +85,6 @@ export default function Home() {
               <span>@builtByRain</span>
             </a>
 
-            <a
-              href="https://www.instagram.com/builtByRain"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="icon-text"
-              style={{ color: "#ffffff", fontSize: "1rem" }}
-            >
-              <span className="icon">
-                <i className="fab fa-instagram icon-instagram"></i>
-              </span>
-              <span>@builtByRain</span>
-            </a>
           </div>
         </div>
       </div>
