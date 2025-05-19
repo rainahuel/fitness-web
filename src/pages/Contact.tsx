@@ -30,19 +30,6 @@ export default function Contact() {
             </span>
             <span>@builtByRain</span>
           </a>
-
-          <a
-            href="https://www.instagram.com/builtByRain"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="icon-text"
-            style={{ color: "#ffffff", fontSize: "1.25rem" }}
-          >
-            <span className="icon">
-              <i className="fab fa-instagram icon-instagram"></i>
-            </span>
-            <span>@builtByRain</span>
-          </a>
         </div>
 
         <p className="mt-4" style={{ color: "#e2e8f0", fontSize: "1rem" }}>
